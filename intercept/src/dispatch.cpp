@@ -956,6 +956,13 @@ CL_API_ENTRY cl_mem CL_API_CALL CLIRN(clCreateBuffer)(
         CHECK_ERROR_INIT( errcode_ret );
         CPU_PERFORMANCE_TIMING_START();
 
+#define CL_MEM_FORCE_SHARED_PHYSICAL_MEMORY_INTEL (1 << 20)
+		const cl_mem_flags hostPtrFlagsSearch = CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR;
+		if ((flags & hostPtrFlagsSearch) == hostPtrFlagsSearch)
+		{
+			flags |= CL_MEM_FORCE_SHARED_PHYSICAL_MEMORY_INTEL;
+		}
+
         cl_mem  retVal = pIntercept->dispatch().clCreateBuffer(
             context,
             flags,
